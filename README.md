@@ -1,6 +1,10 @@
 # 📡 AirBeam QR — Optical Air-Gapped File Transfer Engine
 
 <p align="center">
+  <img src="img1.png" alt="AirBeam QR Banner" width="100%">
+</p>
+
+<p align="center">
   <img src="https://img.shields.io/badge/Offline-100%25-00e676?style=for-the-badge&logo=offline&logoColor=white" alt="100% Offline">
   <img src="https://img.shields.io/badge/Security-Air--Gapped-00f2fe?style=for-the-badge&logo=shield" alt="Air Gapped">
   <img src="https://img.shields.io/badge/Network-Zero_Radio_Emissions-7f00ff?style=for-the-badge" alt="Zero Radio Emissions">
@@ -101,7 +105,7 @@ AQRT:1:<TransferID>:<ChunkIndex>:<TotalChunks>:<PayloadData>
 ### 1. Clone & Run Locally
 
 ```bash
-git clone https://github.com/Ahmad-beast/airbeam-qr
+git clone https://github.com/your-username/airbeam-qr.git
 cd airbeam-qr
 ```
 
@@ -145,6 +149,7 @@ Since **AirBeam QR** is 100% client-side HTML5/CSS/JS with zero backend server d
 
 ```text
 QR transfer/
+├── img1.png              # Main Hero Banner Image for GitHub Repository
 ├── index.html            # Responsive HTML5 layout with Glassmorphic tabs & cards
 ├── styles.css            # Dark futuristic design system with CSS tokens
 ├── app.js                # Core engine (Chunker, Gzip, QR Renderer, Scanner, Simulator)
@@ -152,7 +157,7 @@ QR transfer/
 │   ├── qrcode_gen.js     # High-performance QR matrix generator (Auto Version 1-40)
 │   └── jsqr.min.js       # Fallback JS camera scanner engine
 ├── cert.pem / key.pem    # Self-signed SSL certificates for mobile HTTPS camera testing
-└── README.md             # SEO-optimized GitHub documentation with Recommended Settings
+└── README.md             # SEO-optimized GitHub documentation with Hero Banner
 ```
 
 ---
