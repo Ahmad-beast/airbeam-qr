@@ -101,7 +101,7 @@ AQRT:1:<TransferID>:<ChunkIndex>:<TotalChunks>:<PayloadData>
 ### 1. Clone & Run Locally
 
 ```bash
-git clone https://github.com/your-username/airbeam-qr.git
+git clone https://github.com/Ahmad-beast/airbeam-qr
 cd airbeam-qr
 ```
 
