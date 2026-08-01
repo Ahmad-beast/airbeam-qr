@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AirBeam QR | Optical Air-Gapped File Transfer</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-background">
+        <div class="glow-sphere sphere-1"></div>
+        <div class="glow-sphere sphere-2"></div>
+        <div class="grid-overlay"></div>
+    </div>
+
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="brand">
+                <div class="brand-icon">
+                    <i class="fa-solid fa-qrcode"></i>
+                    <span class="pulse-ring"></span>
+                </div>
+                <div class="brand-text">
+                    <h1>AirBeam <span>QR</span></h1>
+                    <p class="tagline"><i class="fa-solid fa-shield-halved"></i> 100% Offline • Optical Air-Gapped Data Beam</p>
+                </div>
+            </div>
+            
+            <div class="header-actions">
+                <div class="badge offline-badge">
+                    <span class="status-dot green"></span> No Wi-Fi / Data Needed
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <nav class="nav-tabs">
+            <button class="tab-btn active" data-tab="send">
+                <i class="fa-solid fa-paper-plane"></i> Send File (Transmitter)
+            </button>
+            <button class="tab-btn" data-tab="receive">
+                <i class="fa-solid fa-camera"></i> Receive File (Scanner)
+            </button>
+            <button class="tab-btn" data-tab="simulator">
+                <i class="fa-solid fa-vial"></i> Single Screen Simulator
+            </button>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="content-area">
+            
+            <!-- TAB 1: SENDER MODE -->
+            <section id="tab-send" class="tab-content active">
+                <div class="grid-2col">
+                    <!-- Left: File Selector & Controls -->
+                    <div class="card glass-card">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-file-arrow-up"></i> 1. Select File to Beam</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="drop-zone" id="drop-zone">
+                                <input type="file" id="file-input" class="file-input">
+                                <div class="drop-zone-content">
+                                    <i class="fa-solid fa-cloud-arrow-up drop-icon"></i>
+                                    <p class="drop-title">Drag & Drop file here or <span>Browse</span></p>
+                                    <p class="drop-subtitle">Supports Images, PDFs, Zip, Documents, Code, etc.</p>
+                                </div>
+                            </div>
+
+                            <!-- Selected File Info -->
+                            <div class="file-details hidden" id="file-details">
+                                <div class="file-icon-box">
+                                    <i class="fa-solid fa-file" id="file-type-icon"></i>
+                                </div>
+                                <div class="file-meta">
+                                    <h4 id="file-name">filename.ext</h4>
+                                    <p><span id="file-size">0 KB</span> • <span id="file-chunks-count">0 Chunks</span></p>
+                                </div>
+                                <button class="btn-icon" id="btn-remove-file" title="Change file">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </button>
+                            </div>
+
+                            <!-- Transmission Settings -->
+                            <div class="settings-group mt-20">
+                                <div class="settings-header-row">
+                                    <h4><i class="fa-solid fa-sliders"></i> Fine-Tuning & Presets</h4>
+                                    <div class="preset-pills">
+                                        <button class="preset-btn" data-preset="reliable">⚡ 200B</button>
+                                        <button class="preset-btn active" data-preset="optimal">🚀 350B</button>
+                                        <button class="preset-btn" data-preset="speed">🔥 500B</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="setting-item mt-10">
+                                    <div class="setting-label">
+                                        <span><i class="fa-solid fa-bolt"></i> Beam Speed (FPS)</span>
+                                        <span class="setting-value" id="fps-value">20 FPS</span>
+                                    </div>
+                                    <input type="range" id="fps-slider" min="5" max="30" value="20" step="1">
+                                    <div class="range-marks">
+                                        <span>5 (Reliable)</span>
+                                        <span>20 (Fast)</span>
+                                        <span>30 (Turbo)</span>
+                                    </div>
+                                </div>
+
+                                <div class="setting-item mt-15">
+                                    <div class="setting-label">
+                                        <span><i class="fa-solid fa-vector-square"></i> QR Chunk Density</span>
+                                        <span class="setting-value" id="chunk-size-value">350 Bytes</span>
+                                    </div>
+                                    <input type="range" id="chunk-size-slider" min="150" max="800" value="350" step="25">
+                                    <div class="range-marks">
+                                        <span>150 (Easy Scan)</span>
+                                        <span>350 (Optimal Fast)</span>
+                                        <span>800 (High Density)</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Transmission Start Button -->
+                            <div class="action-row mt-20">
+                                <button class="btn btn-primary btn-large w-100" id="btn-start-beam" disabled>
+                                    <i class="fa-solid fa-play"></i> Start Optical Beam
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: QR Display & Stream Visualizer -->
+                    <div class="card glass-card text-center flex-column">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-qrcode"></i> 2. Optical QR Stream</h3>
+                            <div class="badge live-badge hidden" id="beam-status-badge">
+                                <span class="status-dot red pulse"></span> BEAMING LIVE
+                            </div>
+                        </div>
+
+                        <!-- QR Theme Style Switcher -->
+                        <div class="qr-theme-row mb-15">
+                            <span class="theme-label"><i class="fa-solid fa-palette"></i> QR Style:</span>
+                            <button class="style-chip active" data-style="fluid">🎨 Fluid Circuit</button>
+                            <button class="style-chip" data-style="cyber">🌌 Cyber Neon</button>
+                            <button class="style-chip" data-style="rounded">🔵 Rounded</button>
+                            <button class="style-chip" data-style="classic">🏁 Classic</button>
+                        </div>
+                        
+                        <div class="qr-display-container">
+                            <div class="qr-box cyber-frame" id="qr-box">
+                                <div id="qr-canvas-wrapper"></div>
+                                <div class="qr-placeholder" id="qr-placeholder">
+                                    <i class="fa-solid fa-qrcode placeholder-icon"></i>
+                                    <p>Select a file and click "Start Optical Beam" to generate QR stream</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Stream Controls & Stats -->
+                        <div class="stream-stats-box mt-15">
+                            <div class="stat-pill">
+                                <span class="stat-label">Frame</span>
+                                <span class="stat-val" id="stat-current-frame">0 / 0</span>
+                            </div>
+                            <div class="stat-pill">
+                                <span class="stat-label">Loop Count</span>
+                                <span class="stat-val" id="stat-loop-count">0</span>
+                            </div>
+                            <div class="stat-pill">
+                                <span class="stat-label">Est. Transfer Time</span>
+                                <span class="stat-val" id="stat-est-time">-- s</span>
+                            </div>
+                        </div>
+
+                        <div class="stream-controls-row mt-15">
+                            <button class="btn btn-secondary" id="btn-pause-beam" disabled>
+                                <i class="fa-solid fa-pause"></i> Pause
+                            </button>
+                            <button class="btn btn-danger" id="btn-stop-beam" disabled>
+                                <i class="fa-solid fa-stop"></i> Stop Beam
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 2: RECEIVER MODE -->
+            <section id="tab-receive" class="tab-content">
+                <div class="grid-2col">
+                    <!-- Left: Camera Feed Scanner -->
+                    <div class="card glass-card">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-camera"></i> Optical Camera Scanner</h3>
+                            <div class="cam-select-wrapper">
+                                <select id="camera-select" class="cam-select">
+                                    <option value="">Select Camera...</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="camera-container">
+                            <video id="scanner-video" playsinline></video>
+                            <canvas id="scanner-canvas" class="hidden"></canvas>
+                            
+                            <div class="scanner-overlay">
+                                <div class="scan-frame">
+                                    <span class="corner tl"></span>
+                                    <span class="corner tr"></span>
+                                    <span class="corner bl"></span>
+                                    <span class="corner br"></span>
+                                    <div class="scan-line"></div>
+                                </div>
+                                <p class="scan-instruction">Point camera at Sender's Animated QR Code</p>
+                            </div>
+
+                            <div class="camera-placeholder" id="camera-placeholder">
+                                <i class="fa-solid fa-video-slash"></i>
+                                <p>Camera is currently off</p>
+                                <button class="btn btn-primary mt-15" id="btn-start-camera">
+                                    <i class="fa-solid fa-camera"></i> Turn On Camera
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="camera-controls-row mt-15">
+                            <button class="btn btn-secondary" id="btn-stop-camera" disabled>
+                                <i class="fa-solid fa-power-off"></i> Stop Camera
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Right: Receiver Progress & Reconstruction -->
+                    <div class="card glass-card">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-diagram-project"></i> Reassembly Progress</h3>
+                            <span class="badge" id="receive-status-badge">Waiting for QR...</span>
+                        </div>
+
+                        <!-- Progress Bar & Stats -->
+                        <div class="progress-section">
+                            <div class="progress-info">
+                                <span class="progress-percent" id="rx-percent">0%</span>
+                                <span class="progress-count" id="rx-count">0 / 0 Chunks Collected</span>
+                            </div>
+                            <div class="progress-bar-bg">
+                                <div class="progress-bar-fill" id="rx-bar" style="width: 0%;"></div>
+                            </div>
+                            
+                            <div class="rx-meta-row mt-15">
+                                <div><i class="fa-solid fa-file"></i> File: <strong id="rx-file-name">--</strong></div>
+                                <div><i class="fa-solid fa-weight-hanging"></i> Size: <strong id="rx-file-size">--</strong></div>
+                                <div><i class="fa-solid fa-gauge-high"></i> Scan Speed: <strong id="rx-fps-stat">0 FPS</strong></div>
+                            </div>
+                        </div>
+
+                        <!-- Interactive Chunk Matrix Grid -->
+                        <div class="chunk-matrix-container mt-20">
+                            <h4>Chunk Reassembly Grid</h4>
+                            <p class="matrix-hint">Blocks light up glowing green as camera captures QR frames</p>
+                            <div class="chunk-grid" id="chunk-grid">
+                                <div class="chunk-grid-empty">Scan QR code stream to see chunk progress...</div>
+                            </div>
+                        </div>
+
+                        <!-- Download File Area -->
+                        <div class="download-box mt-20 hidden" id="download-box">
+                            <div class="success-banner">
+                                <i class="fa-solid fa-circle-check text-green icon-lg"></i>
+                                <div>
+                                    <h4>File Successfully Reassembled!</h4>
+                                    <p id="download-file-info">Ready for download</p>
+                                </div>
+                            </div>
+                            <button class="btn btn-success btn-large w-100 mt-15" id="btn-download-file">
+                                <i class="fa-solid fa-download"></i> Download File Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 3: DUAL SCREEN SIMULATOR -->
+            <section id="tab-simulator" class="tab-content">
+                <div class="card glass-card mb-20">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-vial"></i> Single Screen Optical Loopback Simulator</h3>
+                        <p class="subtitle">Test optical transfer right here on 1 screen without needing a second device!</p>
+                    </div>
+                    <div class="card-body">
+                        <p>This simulator runs the <strong>Transmitter QR player</strong> on the left and the <strong>Receiver Camera scanner</strong> on the right simultaneously. Your webcam scans the QR generator right off your own screen!</p>
+                        <div class="action-row mt-15">
+                            <button class="btn btn-primary" id="btn-run-sim">
+                                <i class="fa-solid fa-play"></i> Launch Dual Simulator
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-2col" id="sim-container">
+                    <!-- Left: Sim Transmitter -->
+                    <div class="card glass-card">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-paper-plane"></i> Sim Transmitter</h3>
+                        </div>
+                        <div id="sim-sender-mount"></div>
+                    </div>
+
+                    <!-- Right: Sim Receiver -->
+                    <div class="card glass-card">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-camera"></i> Sim Receiver</h3>
+                        </div>
+                        <div id="sim-receiver-mount"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <p>AirBeam QR • 100% Offline Optical Data Transmission System</p>
+            <p class="tech-note"><i class="fa-solid fa-lock"></i> Zero Radio Emissions (No Bluetooth, No Wi-Fi, No Cellular). Powered by Pure Light Photons & Web APIs.</p>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="vendor/qrcode_gen.js"></script>
+    <script src="vendor/qrcode.min.js"></script>
+    <script src="vendor/jsqr.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
